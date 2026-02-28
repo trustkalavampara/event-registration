@@ -76,37 +76,62 @@ fetch(API_URL + "?action=getPrograms")
      FORM SUBMISSION
   ========================= */
 
-  const form = document.getElementById("registrationForm");
+const form = document.getElementById("registrationForm");
+const loadingOverlay = document.getElementById("loadingOverlay");
 
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
+form.addEventListener("submit", function (e) {
+  e.preventDefault();
 
-    const nameInput = document.getElementById("name");
-    const name = nameInput.value.trim();
+  // Get name
+  const name = document.getElementById("name").value.trim();
 
-    if (name === "") {
-      alert("Please enter your name.");
-      return;
-    }
+  // Get selected events (checkboxes)
+  const selectedEvents = Array.from(
+    document.querySelectorAll("input[name='events']:checked")
+  ).map(el => el.value);
 
-    const selectedEvents = [];
-    const checkedBoxes = document.querySelectorAll("#eventsContainer input:checked");
+  // Validation
+  if (!name) {
+    alert("Please enter your name.");
+    return;
+  }
 
-    checkedBoxes.forEach(cb => {
-      selectedEvents.push(cb.value);
+  if (selectedEvents.length === 0) {
+    alert("Please select at least one event.");
+    return;
+  }
+
+  // Show loading overlay
+  loadingOverlay.classList.remove("hidden");
+
+  const formData = {
+    name: name,
+    events: selectedEvents
+  };
+
+  fetch(API_URL + "?action=register", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(formData)
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert("Registration successful!");
+        form.reset();
+      } else {
+        alert("Registration failed.");
+      }
+    })
+    .catch(error => {
+      console.error("Error submitting:", error);
+      alert("Error connecting to server.");
+    })
+    .finally(() => {
+      loadingOverlay.classList.add("hidden");
     });
-
-    if (selectedEvents.length === 0) {
-      alert("Please select at least one event.");
-      return;
-    }
-
-    console.log("Name:", name);
-    console.log("Selected Events:", selectedEvents);
-
-    alert("Registration captured (console only).");
-
-    form.reset();
-  });
+});
 
 });
