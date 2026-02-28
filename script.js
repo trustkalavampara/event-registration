@@ -1,10 +1,41 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-  const eventsContainer = document.getElementById("eventsContainer");
-  const form = document.getElementById("registrationForm");
+  /* =========================
+     SECTION SWITCHING (SPA)
+  ========================= */
 
-  // Temporary placeholder events
-  // Later this will be replaced with API call
+  const navButtons = document.querySelectorAll(".nav-btn");
+  const sections = document.querySelectorAll(".card-section");
+
+  navButtons.forEach(button => {
+    button.addEventListener("click", function () {
+
+      // Remove active class from all buttons
+      navButtons.forEach(btn => btn.classList.remove("active"));
+
+      // Hide all sections
+      sections.forEach(section => section.classList.remove("active"));
+
+      // Activate clicked button
+      this.classList.add("active");
+
+      // Show corresponding section
+      const targetSection = document.getElementById(this.dataset.section);
+      if (targetSection) {
+        targetSection.classList.add("active");
+      }
+
+    });
+  });
+
+
+  /* =========================
+     LOAD EVENTS (TEMP DATA)
+     Will be replaced by API
+  ========================= */
+
+  const eventsContainer = document.getElementById("eventsContainer");
+
   const sampleEvents = [
     "പാട്ട്",
     "കവിത",
@@ -36,21 +67,45 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+
+  /* =========================
+     FORM SUBMISSION
+     (Console only for now)
+  ========================= */
+
+  const form = document.getElementById("registrationForm");
+
   form.addEventListener("submit", function (e) {
     e.preventDefault();
 
-    const name = document.getElementById("name").value.trim();
-    const selectedEvents = [];
+    const nameInput = document.getElementById("name");
+    const name = nameInput.value.trim();
 
-    const checkboxes = document.querySelectorAll("#eventsContainer input:checked");
-    checkboxes.forEach(cb => {
+    if (name === "") {
+      alert("Please enter your name.");
+      return;
+    }
+
+    const selectedEvents = [];
+    const checkedBoxes = document.querySelectorAll("#eventsContainer input:checked");
+
+    checkedBoxes.forEach(cb => {
       selectedEvents.push(cb.value);
     });
+
+    if (selectedEvents.length === 0) {
+      alert("Please select at least one event.");
+      return;
+    }
 
     console.log("Name:", name);
     console.log("Selected Events:", selectedEvents);
 
-    alert("Form submitted (console log only for now)");
+    alert("Registration captured (console only).");
+
+    // Optional reset
+    form.reset();
   });
+
 
 });
