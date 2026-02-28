@@ -8,34 +8,67 @@
 </head>
 <body>
 
-  <div class="container">
+  <!-- HEADER -->
+  <header class="header">
+    <h1>Event Name</h1>
+  </header>
 
-    <h1>Event Registration</h1>
+  <!-- NAVIGATION -->
+  <nav class="nav">
+    <button class="nav-btn active" data-section="register">Register</button>
+    <button class="nav-btn" data-section="registrations">Registrations</button>
+    <button class="nav-btn" data-section="participants">Participants</button>
+  </nav>
 
-    <form id="registrationForm">
+  <!-- CONTENT AREA -->
+  <main class="content">
 
-      <label for="name">Participant Name</label>
-      <input 
-        type="text" 
-        id="name" 
-        name="name" 
-        placeholder="Enter your name"
-        required
-      >
+    <!-- REGISTER SECTION -->
+    <section id="register" class="card-section active">
+      <h2>Register</h2>
 
-      <h2>Select Events</h2>
+      <form id="registrationForm">
 
-      <div id="eventsContainer">
-        <!-- Events will load here dynamically -->
+        <label for="name">Participant Name</label>
+        <input 
+          type="text" 
+          id="name" 
+          name="name" 
+          placeholder="Enter your name"
+          required
+        >
+
+        <h3>Select Events</h3>
+        <div id="eventsContainer">
+          <!-- Dynamic events -->
+        </div>
+
+        <button type="submit" class="submit-btn">
+          Submit Registration
+        </button>
+
+      </form>
+    </section>
+
+    <!-- REGISTRATIONS SECTION -->
+    <section id="registrations" class="card-section">
+      <h2>Registrations</h2>
+      <div id="registrationsContainer">
+        <!-- Dynamic registrations list -->
+        <p>Registrations will appear here.</p>
       </div>
+    </section>
 
-      <button type="submit" class="submit-btn">
-        Submit Registration
-      </button>
+    <!-- PARTICIPANTS SECTION -->
+    <section id="participants" class="card-section">
+      <h2>Participants</h2>
+      <div id="participantsContainer">
+        <!-- Dynamic participants list -->
+        <p>Participants will appear here.</p>
+      </div>
+    </section>
 
-    </form>
-
-  </div>
+  </main>
 
   <script src="script.js"></script>
 </body>
