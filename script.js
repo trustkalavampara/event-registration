@@ -76,62 +76,37 @@ fetch(API_URL + "?action=getPrograms")
      FORM SUBMISSION
   ========================= */
 
-const form = document.getElementById("registrationForm");
-const loadingOverlay = document.getElementById("loadingOverlay");
+  const form = document.getElementById("registrationForm");
 
-form.addEventListener("submit", function (e) {
-  e.preventDefault();
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
 
-  // Get name
-  const name = document.getElementById("name").value.trim();
+    const nameInput = document.getElementById("name");
+    const name = nameInput.value.trim();
 
-  // Get selected events (checkboxes)
-  const selectedEvents = Array.from(
-    document.querySelectorAll("input[name='events']:checked")
-  ).map(el => el.value);
+    if (name === "") {
+      alert("Please enter your name.");
+      return;
+    }
 
-  // Validation
-  if (!name) {
-    alert("Please enter your name.");
-    return;
-  }
+    const selectedEvents = [];
+    const checkedBoxes = document.querySelectorAll("#eventsContainer input:checked");
 
-  if (selectedEvents.length === 0) {
-    alert("Please select at least one event.");
-    return;
-  }
-
-  // Show loading overlay
-  loadingOverlay.classList.remove("hidden");
-
-  const formData = {
-    name: name,
-    events: selectedEvents
-  };
-
-  fetch(API_URL + "?action=register", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(formData)
-  })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        alert("Registration successful!");
-        form.reset();
-      } else {
-        alert("Registration failed.");
-      }
-    })
-    .catch(error => {
-      console.error("Error submitting:", error);
-      alert("Error connecting to server.");
-    })
-    .finally(() => {
-      loadingOverlay.classList.add("hidden");
+    checkedBoxes.forEach(cb => {
+      selectedEvents.push(cb.value);
     });
-});
+
+    if (selectedEvents.length === 0) {
+      alert("Please select at least one event.");
+      return;
+    }
+
+    console.log("Name:", name);
+    console.log("Selected Events:", selectedEvents);
+
+    alert("Registration captured (console only).");
+
+    form.reset();
+  });
 
 });
