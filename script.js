@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded", function () {
     fetch(API_URL + "?action=register", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "text/plain"
       },
       body: JSON.stringify(formData)
     })
