@@ -32,19 +32,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const API_URL = "https://script.google.com/macros/s/AKfycbxe2gaYlTFS9Oqmo0rmJ5UJ3BGSA95BWeHPAw9n7UV0AJky5Q0hKPzcN3o-HumTrqq-/exec";
 
+  document.body.classList.add("loading");
   fetch(API_URL + "?action=getPrograms")
-    .then(response => response.json())
-    .then(data => {
-      if (data) {
-        loadEvents(data);
-      } else {
-        alert("Failed to load programs.");
-      }
-    })
-    .catch(error => {
-      console.error("Error loading programs:", error);
-      alert("Error connecting to server.");
-    });
+  .then(response => response.json())
+  .then(data => {
+    loadEvents(data);
+  })
+  .catch(error => {
+    console.error("Error loading programs:", error);
+    alert("Error connecting to server.");
+  })
+  .finally(() => {
+    document.body.classList.remove("loading");
+  });
 
 
   function loadEvents(events) {
