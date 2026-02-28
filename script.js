@@ -10,16 +10,11 @@ document.addEventListener("DOMContentLoaded", function () {
   navButtons.forEach(button => {
     button.addEventListener("click", function () {
 
-      // Remove active class from all buttons
       navButtons.forEach(btn => btn.classList.remove("active"));
-
-      // Hide all sections
       sections.forEach(section => section.classList.remove("active"));
 
-      // Activate clicked button
       this.classList.add("active");
 
-      // Show corresponding section
       const targetSection = document.getElementById(this.dataset.section);
       if (targetSection) {
         targetSection.classList.add("active");
@@ -30,27 +25,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
   /* =========================
-     LOAD EVENTS (TEMP DATA)
-     Will be replaced by API
+     LOAD EVENTS FROM API
   ========================= */
 
   const eventsContainer = document.getElementById("eventsContainer");
 
-const API_URL = "https://script.google.com/macros/s/AKfycbxe2gaYlTFS9Oqmo0rmJ5UJ3BGSA95BWeHPAw9n7UV0AJky5Q0hKPzcN3o-HumTrqq-/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbxe2gaYlTFS9Oqmo0rmJ5UJ3BGSA95BWeHPAw9n7UV0AJky5Q0hKPzcN3o-HumTrqq-/exec";
 
-fetch(API_URL + "?action=getPrograms")
-  .then(response => response.json())
-  .then(data => {
-    if (data.programs) {
-      loadEvents(data.programs);
-    } else {
-      alert("Failed to load programs.");
-    }
-  })
-  .catch(error => {
-    console.error("Error loading programs:", error);
-    alert("Error connecting to server.");
-  });
+  fetch(API_URL + "?action=getPrograms")
+    .then(response => response.json())
+    .then(data => {
+      if (data.programs) {
+        loadEvents(data.programs);
+      } else {
+        alert("Failed to load programs.");
+      }
+    })
+    .catch(error => {
+      console.error("Error loading programs:", error);
+      alert("Error connecting to server.");
+    });
 
 
   function loadEvents(events) {
@@ -77,7 +71,6 @@ fetch(API_URL + "?action=getPrograms")
 
   /* =========================
      FORM SUBMISSION
-     (Console only for now)
   ========================= */
 
   const form = document.getElementById("registrationForm");
@@ -110,9 +103,7 @@ fetch(API_URL + "?action=getPrograms")
 
     alert("Registration captured (console only).");
 
-    // Optional reset
     form.reset();
   });
-
 
 });
