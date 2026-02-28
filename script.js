@@ -36,13 +36,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const eventsContainer = document.getElementById("eventsContainer");
 
-  const sampleEvents = [
-    "പാട്ട്",
-    "കവിത",
-    "ഡാൻസ്",
-    "ക്വിസ്",
-    "ബോൾ പാസിംഗ്"
-  ];
+const API_URL = "https://script.google.com/macros/s/AKfycbxe2gaYlTFS9Oqmo0rmJ5UJ3BGSA95BWeHPAw9n7UV0AJky5Q0hKPzcN3o-HumTrqq-/exec";
+
+fetch(API_URL + "?action=getPrograms")
+  .then(response => response.json())
+  .then(data => {
+    if (data.programs) {
+      loadEvents(data.programs);
+    } else {
+      alert("Failed to load programs.");
+    }
+  })
+  .catch(error => {
+    console.error("Error loading programs:", error);
+    alert("Error connecting to server.");
+  });
 
   loadEvents(sampleEvents);
 
