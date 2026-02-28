@@ -120,6 +120,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 fetch(API_URL, {
   method: "POST",
+  headers: {
+    "Content-Type": "text/plain;charset=utf-8"
+  },
   body: JSON.stringify({
     action: "register",
     name: name,
@@ -130,14 +133,12 @@ fetch(API_URL, {
 .then(data => {
   if (data.success) {
     alert("Registration successful!");
-    form.reset();
   } else {
     alert("Registration failed.");
   }
 })
 .catch(err => {
   console.error("Submit error:", err);
-  alert("Network error.");
 })
       .finally(() => {
         hideLoading();
