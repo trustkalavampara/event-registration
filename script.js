@@ -25,29 +25,41 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
   /* =========================
-     LOAD EVENTS FROM API
+     API CONFIG
   ========================= */
-
-  const eventsContainer = document.getElementById("eventsContainer");
 
   const API_URL = "https://script.google.com/macros/s/AKfycbxe2gaYlTFS9Oqmo0rmJ5UJ3BGSA95BWeHPAw9n7UV0AJky5Q0hKPzcN3o-HumTrqq-/exec";
 
-const loadingOverlay = document.getElementById("loadingOverlay");
+  const eventsContainer = document.getElementById("eventsContainer");
+  const loadingOverlay = document.getElementById("loadingOverlay");
 
-loadingOverlay.classList.remove("hidden");
 
-fetch(API_URL + "?action=getPrograms")
-  .then(response => response.json())
-  .then(data => {
-    loadEvents(data);
-  })
-  .catch(error => {
-    console.error("Error loading programs:", error);
-    alert("Error connecting to server.");
-  })
-  .finally(() => {
+  /* =========================
+     LOAD PROGRAMS
+  ========================= */
+
+  function showLoading() {
+    loadingOverlay.classList.remove("hidden");
+  }
+
+  function hideLoading() {
     loadingOverlay.classList.add("hidden");
-  });
+  }
+
+  showLoading();
+
+  fetch(API_URL + "?action=getPrograms")
+    .then(response => response.json())
+    .then(data => {
+      loadEvents(data);
+    })
+    .catch(error => {
+      console.error("Error loading programs:", error);
+      alert("Error connecting to server.");
+    })
+    .finally(() => {
+      hideLoading();
+    });
 
 
   function loadEvents(events) {
@@ -59,6 +71,7 @@ fetch(API_URL + "?action=getPrograms")
 
       const checkbox = document.createElement("input");
       checkbox.type = "checkbox";
+      checkbox.name = "events";   // IMPORTANT
       checkbox.value = event;
 
       const span = document.createElement("span");
@@ -89,24 +102,46 @@ fetch(API_URL + "?action=getPrograms")
       return;
     }
 
-    const selectedEvents = [];
-    const checkedBoxes = document.querySelectorAll("#eventsContainer input:checked");
-
-    checkedBoxes.forEach(cb => {
-      selectedEvents.push(cb.value);
-    });
+    const selectedEvents = Array.from(
+      document.querySelectorAll("input[name='events']:checked")
+    ).map(cb => cb.value);
 
     if (selectedEvents.length === 0) {
       alert("Please select at least one event.");
       return;
     }
 
-    console.log("Name:", name);
-    console.log("Selected Events:", selectedEvents);
+    const formData = {
+      name: name,
+      events: selectedEvents
+    };
 
-    alert("Registration captured (console only).");
+    showLoading();
 
-    form.reset();
+    fetch(API_URL + "?action=register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(formData)
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert("Registration successful!");
+          form.reset();
+        } else {
+          alert("Registration failed.");
+        }
+      })
+      .catch(error => {
+        console.error("Error submitting:", error);
+        alert("Error connecting to server.");
+      })
+      .finally(() => {
+        hideLoading();
+      });
+
   });
 
 });
