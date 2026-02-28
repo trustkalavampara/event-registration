@@ -52,7 +52,7 @@ fetch(API_URL + "?action=getPrograms")
     alert("Error connecting to server.");
   });
 
-  loadEvents(sampleEvents);
+  /*loadEvents(sampleEvents);*/
 
   function loadEvents(events) {
     eventsContainer.innerHTML = "";
