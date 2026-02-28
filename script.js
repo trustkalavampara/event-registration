@@ -35,8 +35,8 @@ document.addEventListener("DOMContentLoaded", function () {
   fetch(API_URL + "?action=getPrograms")
     .then(response => response.json())
     .then(data => {
-      if (data.programs) {
-        loadEvents(data.programs);
+      if (data) {
+        loadEvents(data);
       } else {
         alert("Failed to load programs.");
       }
