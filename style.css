@@ -13,6 +13,19 @@ body {
   color: #333;
 }
 
+
+/* =========================
+   LOADING STATE
+========================= */
+
+body.loading {
+  cursor: wait;
+}
+
+body.loading * {
+  pointer-events: none;
+}
+
 /* =========================
    HEADER
 ========================= */
