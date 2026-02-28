@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", function () {
       method: "POST",
       body: JSON.stringify(formData)
     })
-      .then(response => response.json())
+      .then(response => response.text())
       .then(data => {
         if (data.success) {
           alert("Registration successful!");
