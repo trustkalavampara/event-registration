@@ -32,8 +32,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const API_URL = "https://script.google.com/macros/s/AKfycbxe2gaYlTFS9Oqmo0rmJ5UJ3BGSA95BWeHPAw9n7UV0AJky5Q0hKPzcN3o-HumTrqq-/exec";
 
-  document.body.classList.add("loading");
-  fetch(API_URL + "?action=getPrograms")
+const loadingOverlay = document.getElementById("loadingOverlay");
+
+loadingOverlay.classList.remove("hidden");
+
+fetch(API_URL + "?action=getPrograms")
   .then(response => response.json())
   .then(data => {
     loadEvents(data);
@@ -43,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
     alert("Error connecting to server.");
   })
   .finally(() => {
-    document.body.classList.remove("loading");
+    loadingOverlay.classList.add("hidden");
   });
 
 
