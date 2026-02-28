@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Registration</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container">
+
+    <h1>Event Registration</h1>
+
+    <form id="registrationForm">
+
+      <label for="name">Participant Name</label>
+      <input 
+        type="text" 
+        id="name" 
+        name="name" 
+        placeholder="Enter your name"
+        required
+      >
+
+      <h2>Select Events</h2>
+
+      <div id="eventsContainer">
+        <!-- Events will load here dynamically -->
+      </div>
+
+      <button type="submit" class="submit-btn">
+        Submit Registration
+      </button>
+
+    </form>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
