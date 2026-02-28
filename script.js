@@ -118,23 +118,27 @@ document.addEventListener("DOMContentLoaded", function () {
 
     showLoading();
 
-    fetch(API_URL + "?action=register", {
-      method: "POST",
-      body: JSON.stringify(formData)
-    })
-      .then(response => response.text())
-      .then(data => {
-        if (data.success) {
-          alert("Registration successful!");
-          form.reset();
-        } else {
-          alert("Registration failed.");
-        }
-      })
-      .catch(error => {
-        console.error("Error submitting:", error);
-        alert("Error connecting to server.");
-      })
+fetch(API_URL, {
+  method: "POST",
+  body: JSON.stringify({
+    action: "register",
+    name: name,
+    events: selectedEvents
+  })
+})
+.then(res => res.json())
+.then(data => {
+  if (data.success) {
+    alert("Registration successful!");
+    form.reset();
+  } else {
+    alert("Registration failed.");
+  }
+})
+.catch(err => {
+  console.error("Submit error:", err);
+  alert("Network error.");
+})
       .finally(() => {
         hideLoading();
       });
