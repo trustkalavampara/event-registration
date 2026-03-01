@@ -306,21 +306,46 @@ input[type="text"] {
 }
 
 /* --- PARTICIPANT LIST (For Participants View) --- */
+
+/* --- PARTICIPANT CARD ENHANCEMENTS --- */
+.participant-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f0fdf4; /* Light green tint */
+    color: #166534; /* Dark green text */
+}
+
+.count-pill {
+    background: #28a745;
+    color: white;
+    font-size: 14px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
 .participant-list {
     display: flex;
     flex-direction: column;
-    gap: 5px;
 }
 
 .p-name {
-    padding: 12px 0; /* More space between names */
-    font-size: 18px; /* Larger participant names */
-    border-bottom: 1px dashed #eee;
+    font-size: 19px; /* Slightly larger for readability */
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
     color: #333;
 }
 
 .p-name:last-child {
     border-bottom: none;
+}
+
+.no-data {
+    color: #999;
+    font-style: italic;
+    font-size: 16px;
+    padding: 10px 0;
 }
 
 .count-badge {
