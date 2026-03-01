@@ -126,20 +126,21 @@ navButtons.forEach(btn => {
 function renderCards(container, data, type) {
     container.innerHTML = ""; // Clear
     
-    // If data is empty or only contains one empty row
-    if (!data || data.length === 0 || (data.length === 1 && data[0][0] === "")) {
+    if (!data || data.length === 0) {
         container.innerHTML = "<p style='text-align:center; color:#888;'>No registrations found yet.</p>";
         return;
     }
 
     if (type === 'registrations') {
-        // Since there is NO header, we process every row starting from index 0
-        data.forEach(row => {
-            // Check if row has a name (Column B / Index 1)
-            const name = row[1];
-            if (!name) return; // Skip empty rows
+        // --- NEW: REVERSE THE DATA ---
+        // We create a shallow copy with [...] then reverse so the latest timestamp is first
+        const displayData = [...data].reverse();
 
-            // Collect all events from Column C (Index 2) onwards
+        displayData.forEach(row => {
+            const name = row[1];
+            if (!name || name.toString().trim() === "") return; // Skip empty rows
+
+            // Collect events from Column C (Index 2) onwards
             const events = row.slice(2).filter(e => e && e.toString().trim() !== "");
 
             const card = document.createElement('div');
@@ -149,7 +150,7 @@ function renderCards(container, data, type) {
                 <div class="card-header">${name}</div>
                 <div class="card-body">
                     <div class="registration-meta">
-                        <small>Registered on: ${formatDate(row[0])}</small>
+                        <small>Registered: ${formatDate(row[0])}</small>
                     </div>
                     <div class="tag-container">
                         ${events.map(e => `<span class="tag">${e}</span>`).join('')}
@@ -159,7 +160,7 @@ function renderCards(container, data, type) {
             container.appendChild(card);
         });
     } else {
-        // Participants logic remains the same (mapping by Program names)
+        // Handle Participants View logic
         renderParticipantsCards(container, data);
     }
 }
