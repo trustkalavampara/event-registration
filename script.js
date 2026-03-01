@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
      API CONFIG
   ========================= */
 
-  const API_URL = "https://script.google.com/macros/s/AKfycbxe2gaYlTFS9Oqmo0rmJ5UJ3BGSA95BWeHPAw9n7UV0AJky5Q0hKPzcN3o-HumTrqq-/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbzGbRp6YMCiYQv5PVgKwVnuQk24h2GymyVJ7dp4T3YhdkiY4miJHp1L6Ysg1_W0LKff/exec";
 
   const eventsContainer = document.getElementById("eventsContainer");
   const loadingOverlay = document.getElementById("loadingOverlay");
