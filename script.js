@@ -107,3 +107,67 @@ function showLoading(show) {
         document.body.classList.remove('loading');
     }
 }
+
+
+// --- 4. VIEW DATA (Registrations & Participants) ---
+
+// Update the navigation listener to fetch data when switching tabs
+navButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const target = btn.getAttribute('data-section');
+        
+        // ... (your existing active class toggle logic) ...
+
+        if (target === 'registrations') fetchTableData('registrations');
+        if (target === 'participants') fetchTableData('participants');
+    });
+});
+
+async function fetchTableData(type) {
+    const container = document.getElementById(`${type}Container`);
+    container.innerHTML = "<p>Loading data...</p>";
+
+    try {
+        // We add a query parameter ?view=registrations or ?view=participants
+        const response = await fetch(`${WEB_APP_URL}?view=${type}`);
+        const data = await response.json();
+
+        if (data.length === 0) {
+            container.innerHTML = "<p>No data found.</p>";
+            return;
+        }
+
+        renderTable(container, data);
+    } catch (error) {
+        console.error(`Error fetching ${type}:`, error);
+        container.innerHTML = "<p style='color:red;'>Failed to load data.</p>";
+    }
+}
+
+function renderTable(container, data) {
+    let html = '<div style="overflow-x:auto;"><table class="data-table">';
+    
+    // Create Headers
+    html += '<thead><tr>';
+    data[0].forEach(header => {
+        html += `<th>${header}</th>`;
+    });
+    html += '</tr></thead>';
+
+    // Create Rows
+    html += '<tbody>';
+    for (let i = 1; i < data.length; i++) {
+        html += '<tr>';
+        data[i].forEach(cell => {
+            // Format timestamp if it's the first column of Registrations
+            const value = (typeof cell === 'string' && cell.includes('T') && !isNaN(Date.parse(cell))) 
+                          ? new Date(cell).toLocaleDateString() 
+                          : cell;
+            html += `<td>${value || ''}</td>`;
+        });
+        html += '</tr>';
+    }
+    html += '</tbody></table></div>';
+    
+    container.innerHTML = html;
+}
