@@ -126,28 +126,31 @@ navButtons.forEach(btn => {
 function renderCards(container, data, type) {
     container.innerHTML = ""; // Clear
     
-    if (data.length < 2) {
-        container.innerHTML = "<p>No data available yet.</p>";
+    // If data is empty or only contains one empty row
+    if (!data || data.length === 0 || (data.length === 1 && data[0][0] === "")) {
+        container.innerHTML = "<p style='text-align:center; color:#888;'>No registrations found yet.</p>";
         return;
     }
 
-    const headers = data[0];
-    const rows = data.slice(1);
-
     if (type === 'registrations') {
-        // STYLE: One card per person
-        rows.forEach(row => {
+        // Since there is NO header, we process every row starting from index 0
+        data.forEach(row => {
+            // Check if row has a name (Column B / Index 1)
+            const name = row[1];
+            if (!name) return; // Skip empty rows
+
+            // Collect all events from Column C (Index 2) onwards
+            const events = row.slice(2).filter(e => e && e.toString().trim() !== "");
+
             const card = document.createElement('div');
             card.className = 'data-card';
-            
-            // Format: Name at top, then list of events
-            const name = row[1];
-            const events = row.slice(2).filter(e => e !== ""); // Get selected events
             
             card.innerHTML = `
                 <div class="card-header">${name}</div>
                 <div class="card-body">
-                    <small>Selected Events:</small>
+                    <div class="registration-meta">
+                        <small>Registered on: ${formatDate(row[0])}</small>
+                    </div>
                     <div class="tag-container">
                         ${events.map(e => `<span class="tag">${e}</span>`).join('')}
                     </div>
@@ -156,26 +159,16 @@ function renderCards(container, data, type) {
             container.appendChild(card);
         });
     } else {
-        // STYLE: One card per Event (Participants view)
-        headers.forEach((eventName, index) => {
-            const participants = rows.map(row => row[index]).filter(p => p !== "");
-            
-            const card = document.createElement('div');
-            card.className = 'data-card';
-            card.innerHTML = `
-                <div class="card-header event-title">${eventName}</div>
-                <div class="card-body">
-                    <div class="participant-list">
-                        ${participants.length > 0 
-                            ? participants.map(p => `<div class="p-name">${p}</div>`).join('') 
-                            : '<span style="color:#999">No participants yet</span>'}
-                    </div>
-                    <div class="count-badge">${participants.length} Total</div>
-                </div>
-            `;
-            container.appendChild(card);
-        });
+        // Participants logic remains the same (mapping by Program names)
+        renderParticipantsCards(container, data);
     }
+}
+
+// Helper to format the Google Sheets Date string
+function formatDate(dateValue) {
+    if (!dateValue) return "N/A";
+    const d = new Date(dateValue);
+    return isNaN(d.getTime()) ? dateValue : d.toLocaleDateString() + " " + d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 }
 
 // Update your fetchTableData to call renderCards
