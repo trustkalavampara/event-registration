@@ -261,21 +261,22 @@ input[type="text"] {
 
 /* --- CARD STYLES --- */
 .data-card {
-   animation: slideIn 0.3s ease-out forwards;
     background: #fff;
-    border-radius: 10px;
-    margin-bottom: 15px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    border-left: 5px solid #2c7be5; /* Blue accent */
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border-left: 6px solid #2c7be5;
     overflow: hidden;
+    animation: slideIn 0.3s ease-out forwards;
 }
 
 .card-header {
     background: #f8f9fa;
-    padding: 12px 15px;
+    padding: 16px 20px; /* Increased padding */
     font-weight: bold;
-    font-size: 16px;
+    font-size: 20px; /* Larger Name/Header */
     border-bottom: 1px solid #eee;
+    color: #222;
 }
 
 .event-title {
@@ -284,23 +285,23 @@ input[type="text"] {
 }
 
 .card-body {
-    padding: 15px;
+    padding: 20px; /* More breathing room */
 }
 
 /* --- TAGS (For Registration View) --- */
 .tag-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 10px;
 }
 
 .tag {
     background: #f0f4f8;
     color: #2c7be5;
     border: 1px solid #d0e1fd;
-    padding: 4px 10px;
-    border-radius: 4px;
-    font-size: 13px;
+    padding: 8px 14px; /* Bigger touch area */
+    border-radius: 6px;
+    font-size: 16px; /* Larger program names (Malayalam looks better at this size) */
     font-weight: 500;
 }
 
@@ -312,8 +313,10 @@ input[type="text"] {
 }
 
 .p-name {
-    padding: 8px 0;
+    padding: 12px 0; /* More space between names */
+    font-size: 18px; /* Larger participant names */
     border-bottom: 1px dashed #eee;
+    color: #333;
 }
 
 .p-name:last-child {
@@ -321,17 +324,20 @@ input[type="text"] {
 }
 
 .count-badge {
-    margin-top: 10px;
-    font-size: 12px;
+    margin-top: 15px;
+    font-size: 15px;
     font-weight: bold;
-    color: #666;
-    text-align: right;
+    color: #444;
+    background: #e9ecef;
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
 }
 
 .registration-meta {
-    margin-bottom: 10px;
-    color: #777;
-    font-size: 12px;
+    margin-bottom: 12px;
+    color: #666;
+    font-size: 14px; /* Larger timestamp */
 }
 
 @keyframes slideIn {
