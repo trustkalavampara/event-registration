@@ -1,93 +1,109 @@
-document.addEventListener("DOMContentLoaded", function () {
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzGbRp6YMCiYQv5PVgKwVnuQk24h2GymyVJ7dp4T3YhdkiY4miJHp1L6Ysg1_W0LKff/exec";
 
-  /* =========================
-     SECTION SWITCHING
-  ========================= */
-  const navButtons = document.querySelectorAll(".nav-btn");
-  const sections = document.querySelectorAll(".card-section");
-  navButtons.forEach(btn => {
-    btn.addEventListener("click", function () {
-      navButtons.forEach(b => b.classList.remove("active"));
-      sections.forEach(s => s.classList.remove("active"));
-      this.classList.add("active");
-      const target = document.getElementById(this.dataset.section);
-      if (target) target.classList.add("active");
-    });
-  });
+// Elements
+const loadingOverlay = document.getElementById('loadingOverlay');
+const eventsContainer = document.getElementById('eventsContainer');
+const registrationForm = document.getElementById('registrationForm');
+const navButtons = document.querySelectorAll('.nav-btn');
+const sections = document.querySelectorAll('.card-section');
 
-  /* =========================
-     LOAD PROGRAMS
-  ========================= */
-  const API_URL = "https://script.google.com/macros/s/AKfycbzGbRp6YMCiYQv5PVgKwVnuQk24h2GymyVJ7dp4T3YhdkiY4miJHp1L6Ysg1_W0LKff/exec";
-  const eventsContainer = document.getElementById("eventsContainer");
-  const loadingOverlay = document.getElementById("loadingOverlay");
-
-  function showLoading() { loadingOverlay.classList.remove("hidden"); }
-  function hideLoading() { loadingOverlay.classList.add("hidden"); }
-
-  showLoading();
-  fetch(API_URL + "?action=getPrograms")
-    .then(res => res.json())
-    .then(data => {
-      if (data.programs) loadEvents(data.programs);
-      else console.error("Programs data missing:", data);
-    })
-    .catch(err => { console.error("Error loading programs:", err); alert("Error connecting to server."); })
-    .finally(() => { hideLoading(); });
-
-  function loadEvents(events) {
-    eventsContainer.innerHTML = "";
-    events.forEach(ev => {
-      const label = document.createElement("label");
-      label.className = "event-item";
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.name = "events";
-      checkbox.value = ev;
-      const span = document.createElement("span");
-      span.textContent = ev;
-      label.appendChild(checkbox);
-      label.appendChild(span);
-      eventsContainer.appendChild(label);
-    });
-  }
-
-  /* =========================
-     FORM SUBMISSION
-  ========================= */
-  const form = document.getElementById("registrationForm");
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-
-    const name = document.getElementById("name").value.trim();
-    if (!name) { alert("Please enter your name."); return; }
-
-    const selectedEvents = Array.from(
-      document.querySelectorAll("input[name='events']:checked")
-    ).map(cb => cb.value);
-
-    if (selectedEvents.length === 0) { alert("Please select at least one event."); return; }
-
-    showLoading();
-
-    // -----------------------------
-    // Simple text/plain POST to bypass CORS
-    // -----------------------------
-    fetch(API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({ action: "register", name: name, events: selectedEvents })
-    })
-    .then(() => {
-      alert("Registration successful!");
-      form.reset();
-    })
-    .catch(err => {
-      console.error("Submit error:", err);
-      alert("Error submitting registration.");
-    })
-    .finally(() => { hideLoading(); });
-
-  });
-
+// --- 1. INITIALIZE: FETCH PROGRAMS ---
+window.addEventListener('DOMContentLoaded', () => {
+    fetchPrograms();
 });
+
+async function fetchPrograms() {
+    showLoading(true);
+    try {
+        const response = await fetch(WEB_APP_URL);
+        const programs = await response.json();
+        renderCheckboxes(programs);
+    } catch (error) {
+        console.error("Error fetching programs:", error);
+        eventsContainer.innerHTML = "<p style='color:red;'>Failed to load programs. Please refresh.</p>";
+    } finally {
+        showLoading(false);
+    }
+}
+
+function renderCheckboxes(programs) {
+    eventsContainer.innerHTML = ""; // Clear
+    programs.forEach(program => {
+        const div = document.createElement('label');
+        div.className = 'event-item';
+        div.innerHTML = `
+            <input type="checkbox" name="events" value="${program}">
+            <span>${program}</span>
+        `;
+        eventsContainer.appendChild(div);
+    });
+}
+
+// --- 2. NAVIGATION LOGIC ---
+navButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const target = btn.getAttribute('data-section');
+        
+        // Update Buttons
+        navButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Update Sections
+        sections.forEach(sec => {
+            sec.classList.remove('active');
+            if (sec.id === target) sec.classList.add('active');
+        });
+    });
+});
+
+// --- 3. FORM SUBMISSION ---
+registrationForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData(registrationForm);
+    const name = formData.get('name');
+    const selectedEvents = formData.getAll('events');
+
+    if (selectedEvents.length === 0) {
+        alert("Please select at least one program.");
+        return;
+    }
+
+    const payload = {
+        name: name,
+        events: selectedEvents
+    };
+
+    showLoading(true);
+
+    try {
+        const response = await fetch(WEB_APP_URL, {
+            method: 'POST',
+            body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+
+        if (result.status === "success") {
+            alert("Registration successful!");
+            registrationForm.reset();
+        } else {
+            alert("Error: " + result.message);
+        }
+    } catch (error) {
+        console.error("Submission error:", error);
+        alert("Network error. Please try again.");
+    } finally {
+        showLoading(false);
+    }
+});
+
+// --- HELPERS ---
+function showLoading(show) {
+    if (show) {
+        loadingOverlay.classList.remove('hidden');
+        document.body.classList.add('loading');
+    } else {
+        loadingOverlay.classList.add('hidden');
+        document.body.classList.remove('loading');
+    }
+}
