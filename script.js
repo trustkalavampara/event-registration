@@ -165,6 +165,51 @@ function renderCards(container, data, type) {
     }
 }
 
+
+function renderParticipantsCards(container, data) {
+    container.innerHTML = ""; // Clear
+
+    if (!data || data.length < 1) {
+        container.innerHTML = "<p style='text-align:center; color:#888;'>No programs found.</p>";
+        return;
+    }
+
+    // Row 0 contains the Program Names (Headers)
+    const programs = data[0];
+    // Rows 1 onwards contain the Participant Names
+    const participantRows = data.slice(1);
+
+    programs.forEach((programName, colIndex) => {
+        if (!programName || programName.toString().trim() === "") return;
+
+        // Extract all names from this specific column, filter out empty cells
+        const participantsInThisProgram = participantRows
+            .map(row => row[colIndex])
+            .filter(name => name && name.toString().trim() !== "");
+
+        const card = document.createElement('div');
+        card.className = 'data-card participant-card';
+        
+        // We use a different accent color for participant cards to distinguish them
+        card.style.borderLeftColor = "#28a745"; 
+
+        card.innerHTML = `
+            <div class="card-header event-title">
+                ${programName}
+                <span class="count-pill">${participantsInThisProgram.length}</span>
+            </div>
+            <div class="card-body">
+                <div class="participant-list">
+                    ${participantsInThisProgram.length > 0 
+                        ? participantsInThisProgram.map(p => `<div class="p-name">${p}</div>`).join('') 
+                        : '<div class="no-data">No participants yet</div>'}
+                </div>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
 // Helper to format the Google Sheets Date string
 function formatDate(dateValue) {
     if (!dateValue) return "N/A";
