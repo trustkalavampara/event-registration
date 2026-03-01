@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
   /* =========================
      LOAD PROGRAMS
   ========================= */
-  const API_URL = "https://script.google.com/macros/s/YOUR_DEPLOYED_SCRIPT_ID/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbzGbRp6YMCiYQv5PVgKwVnuQk24h2GymyVJ7dp4T3YhdkiY4miJHp1L6Ysg1_W0LKff/exec";
   const eventsContainer = document.getElementById("eventsContainer");
   const loadingOverlay = document.getElementById("loadingOverlay");
 
