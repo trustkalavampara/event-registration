@@ -123,51 +123,71 @@ navButtons.forEach(btn => {
     });
 });
 
-async function fetchTableData(type) {
-    const container = document.getElementById(`${type}Container`);
-    container.innerHTML = "<p>Loading data...</p>";
+function renderCards(container, data, type) {
+    container.innerHTML = ""; // Clear
+    
+    if (data.length < 2) {
+        container.innerHTML = "<p>No data available yet.</p>";
+        return;
+    }
 
-    try {
-        // We add a query parameter ?view=registrations or ?view=participants
-        const response = await fetch(`${WEB_APP_URL}?view=${type}`);
-        const data = await response.json();
+    const headers = data[0];
+    const rows = data.slice(1);
 
-        if (data.length === 0) {
-            container.innerHTML = "<p>No data found.</p>";
-            return;
-        }
-
-        renderTable(container, data);
-    } catch (error) {
-        console.error(`Error fetching ${type}:`, error);
-        container.innerHTML = "<p style='color:red;'>Failed to load data.</p>";
+    if (type === 'registrations') {
+        // STYLE: One card per person
+        rows.forEach(row => {
+            const card = document.createElement('div');
+            card.className = 'data-card';
+            
+            // Format: Name at top, then list of events
+            const name = row[1];
+            const events = row.slice(2).filter(e => e !== ""); // Get selected events
+            
+            card.innerHTML = `
+                <div class="card-header">${name}</div>
+                <div class="card-body">
+                    <small>Selected Events:</small>
+                    <div class="tag-container">
+                        ${events.map(e => `<span class="tag">${e}</span>`).join('')}
+                    </div>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    } else {
+        // STYLE: One card per Event (Participants view)
+        headers.forEach((eventName, index) => {
+            const participants = rows.map(row => row[index]).filter(p => p !== "");
+            
+            const card = document.createElement('div');
+            card.className = 'data-card';
+            card.innerHTML = `
+                <div class="card-header event-title">${eventName}</div>
+                <div class="card-body">
+                    <div class="participant-list">
+                        ${participants.length > 0 
+                            ? participants.map(p => `<div class="p-name">${p}</div>`).join('') 
+                            : '<span style="color:#999">No participants yet</span>'}
+                    </div>
+                    <div class="count-badge">${participants.length} Total</div>
+                </div>
+            `;
+            container.appendChild(card);
+        });
     }
 }
 
-function renderTable(container, data) {
-    let html = '<div style="overflow-x:auto;"><table class="data-table">';
-    
-    // Create Headers
-    html += '<thead><tr>';
-    data[0].forEach(header => {
-        html += `<th>${header}</th>`;
-    });
-    html += '</tr></thead>';
+// Update your fetchTableData to call renderCards
+async function fetchTableData(type) {
+    const container = document.getElementById(`${type}Container`);
+    container.innerHTML = "<div class='loading-spinner'>Updating...</div>";
 
-    // Create Rows
-    html += '<tbody>';
-    for (let i = 1; i < data.length; i++) {
-        html += '<tr>';
-        data[i].forEach(cell => {
-            // Format timestamp if it's the first column of Registrations
-            const value = (typeof cell === 'string' && cell.includes('T') && !isNaN(Date.parse(cell))) 
-                          ? new Date(cell).toLocaleDateString() 
-                          : cell;
-            html += `<td>${value || ''}</td>`;
-        });
-        html += '</tr>';
+    try {
+        const response = await fetch(`${WEB_APP_URL}?view=${type}`);
+        const data = await response.json();
+        renderCards(container, data, type);
+    } catch (error) {
+        container.innerHTML = "<p style='color:red;'>Failed to load. Check connection.</p>";
     }
-    html += '</tbody></table></div>';
-    
-    container.innerHTML = html;
 }
