@@ -257,3 +257,71 @@ input[type="text"] {
 .data-table tr:nth-child(even) {
     background-color: #fafafa;
 }
+
+
+/* --- CARD STYLES --- */
+.data-card {
+    background: #fff;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border-left: 5px solid #2c7be5; /* Blue accent */
+    overflow: hidden;
+}
+
+.card-header {
+    background: #f8f9fa;
+    padding: 12px 15px;
+    font-weight: bold;
+    font-size: 16px;
+    border-bottom: 1px solid #eee;
+}
+
+.event-title {
+    background: #eef5ff;
+    color: #2c7be5;
+}
+
+.card-body {
+    padding: 15px;
+}
+
+/* --- TAGS (For Registration View) --- */
+.tag-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.tag {
+    background: #e9ecef;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #495057;
+}
+
+/* --- PARTICIPANT LIST (For Participants View) --- */
+.participant-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.p-name {
+    padding: 8px 0;
+    border-bottom: 1px dashed #eee;
+}
+
+.p-name:last-child {
+    border-bottom: none;
+}
+
+.count-badge {
+    margin-top: 10px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #666;
+    text-align: right;
+}
