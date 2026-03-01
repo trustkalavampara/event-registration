@@ -8,15 +8,14 @@
 </head>
 <body>
 
+  <!-- LOADING OVERLAY -->
   <div id="loadingOverlay" class="loading-overlay hidden">
-  <div class="loading-card">
-    <div>Loading programs...</div>
-    <div style="margin-top:6px; font-size:14px; color:#666;">
-      Please wait
+    <div class="loading-card">
+      <div>Loading programs...</div>
+      <div style="margin-top:6px; font-size:14px; color:#666;">Please wait</div>
     </div>
   </div>
-</div>
-  
+
   <!-- HEADER -->
   <header class="header">
     <h1>Event Name</h1>
@@ -39,22 +38,12 @@
       <form id="registrationForm">
 
         <label for="name">Participant Name</label>
-        <input 
-          type="text" 
-          id="name" 
-          name="name" 
-          placeholder="Enter your name"
-          required
-        >
+        <input type="text" id="name" name="name" placeholder="Enter your name" required>
 
         <h3>Select Programs</h3>
-        <div id="eventsContainer">
-          <!-- Dynamic events -->
-        </div>
+        <div id="eventsContainer"></div>
 
-        <button type="submit" class="submit-btn">
-          Submit Registration
-        </button>
+        <button type="submit" class="submit-btn">Submit Registration</button>
 
       </form>
     </section>
@@ -62,24 +51,17 @@
     <!-- REGISTRATIONS SECTION -->
     <section id="registrations" class="card-section">
       <h2>Registrations</h2>
-      <div id="registrationsContainer">
-        <!-- Dynamic registrations list -->
-        <p>Registrations will appear here.</p>
-      </div>
+      <div id="registrationsContainer"><p>Registrations will appear here.</p></div>
     </section>
 
     <!-- PARTICIPANTS SECTION -->
     <section id="participants" class="card-section">
       <h2>Participants</h2>
-      <div id="participantsContainer">
-        <!-- Dynamic participants list -->
-        <p>Participants will appear here.</p>
-      </div>
+      <div id="participantsContainer"><p>Participants will appear here.</p></div>
     </section>
 
   </main>
 
   <script src="script.js"></script>
 </body>
-  
 </html>
